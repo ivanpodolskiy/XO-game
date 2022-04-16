@@ -9,71 +9,46 @@
 import UIKit
 
 class GameViewController: UIViewController {
+    
+    var game: Game?
+    var gameMode: GameMode = .computerMode
+    var text: String?
 
+    
     //MARK: - outletls
     @IBOutlet var gameboardView: GameboardView!
     @IBOutlet var firstPlayerTurnLabel: UILabel!
     @IBOutlet var secondPlayerTurnLabel: UILabel!
     @IBOutlet var winnerLabel: UILabel!
     @IBOutlet var restartButton: UIButton!
+    @IBOutlet var counter: UILabel!
+    @IBOutlet weak var drawMarkOnBlindMode: UIButton!
+    @IBOutlet weak var gameModeLabel: UILabel!
     
     
     //MARK: - Private Properties
-    private lazy var referee = Referee(gameboard: gameboard)
     private let gameboard = Gameboard()
-    private var currentState: GameState! {
-        didSet {
-            currentState.begin()
-        }
-    }
-    
     
     
     //MARK: - Lifecycel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-    goToFirstState()
-        
-        gameboardView.onSelectPosition = { [weak self] position in
-            guard let self = self else { return }
-            
-            self.currentState.addMark(at: position)
-            
-            if self.currentState.isCompleted {
-                self.goToNextState()
-            }
-        }
+        self.game = Game(gameMode: gameMode, gameViewController: self, gameboardView: gameboardView)
+        self.gameModeLabel.text = text
+        game?.gameMainMethod()
     }
     
-    func goToFirstState(){
-        let player = Player.first
-        currentState = PlayerInputState(player: .first,
-                                        markViewPrototype: player.markViewPrototype,
-                                        gameViewController: self,
-                                        gameboard: gameboard,
-                                        gameboardView: gameboardView)
-    }
     
-    func goToNextState(){
-        if let winner = referee.determineWinner() {
-            currentState = GameEndedState(winner: winner, gameViewController: self)
-            return
-        }
-        if let playerInputState = currentState as? PlayerInputState {
-            let player = playerInputState.player.next
-            currentState = PlayerInputState(player: player,
-                                            markViewPrototype: player.markViewPrototype,
-                                            gameViewController: self,
-                                            gameboard: gameboard,
-                                            gameboardView: gameboardView)
-        }
-    }
+    //    func goTo
     //MARK: - Actions
     
     @IBAction func restartButtonTapped(_ sender: UIButton) {
-        Log(.restartGame)
+        game?.restartGame()
+    }
+    
+    @IBAction func actionDrawMarkOnBlindMode(_ sender: UIButton) {
+        game?.blindeMode(sender: drawMarkOnBlindMode)
     }
 }
 

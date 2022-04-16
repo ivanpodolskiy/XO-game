@@ -10,6 +10,7 @@ import Foundation
 
 class PlayerInputState: GameState {
     
+    
     private(set) var isCompleted = false
     
     let player: Player
@@ -37,8 +38,8 @@ class PlayerInputState: GameState {
             self.gameViewController?.firstPlayerTurnLabel.isHidden = true
             self.gameViewController?.secondPlayerTurnLabel.isHidden = false
         }
-        
         self.gameViewController?.winnerLabel.isHidden = true
+        self.gameViewController?.counter.isHidden = true
     }
     
     func addMark(at position: GameboardPosition) {
@@ -46,15 +47,6 @@ class PlayerInputState: GameState {
         guard let gameboardView = gameboardView, gameboardView.canPlaceMarkView(at: position) else {
             return
         }
-        
-//        let markView: MarkView
-//        switch player {
-//        case .first:
-//            markView = XView()
-//        case .second:
-//            markView = OView()
-//        }
-        
         gameboard?.setPlayer(player, at: position)
         gameboardView.placeMarkView(markViewPrototype.copy(), at: position)
         isCompleted = true
