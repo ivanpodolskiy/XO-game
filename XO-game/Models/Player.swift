@@ -11,6 +11,7 @@ import Foundation
 public enum Player: CaseIterable {
     case first
     case second
+  
     
     var next: Player {
         switch self {

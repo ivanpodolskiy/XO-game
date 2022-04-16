@@ -9,6 +9,7 @@
 import Foundation
 
 class GameEndedState: GameState {
+    
     //MARK: - Properties
     var isCompleted: Bool = false
     
@@ -26,13 +27,11 @@ class GameEndedState: GameState {
     func begin() {
         Log(.gameFinished(winner: self.winner))
         gameViewController?.winnerLabel.isHidden = false
-        
         if let winner = winner {
-            gameViewController?.winnerLabel.text = winnerName(from: winner) + "win"
+            gameViewController?.winnerLabel.text = winnerName(from: winner) + " win"
         } else {
             gameViewController?.winnerLabel.text = "No winner"
         }
-        
         gameViewController?.firstPlayerTurnLabel.isHidden = true
         gameViewController?.secondPlayerTurnLabel.isHidden = true
     }
